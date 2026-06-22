@@ -18,7 +18,7 @@ class Test2_Hero_Widget extends \Elementor\Widget_Base {
 	}
 
 	public function get_categories() {
-		return [ 'general' ];
+		return [ 'test2-category' ];
 	}
 
 	protected function register_controls() {
@@ -61,6 +61,7 @@ class Test2_Hero_Widget extends \Elementor\Widget_Base {
 	}
 
 	protected function render() {
+		test2_mark_widget_used();
 		$settings = $this->get_settings_for_display();
 		?>
 		<div class="home-hero gutters fixed-section" style="opacity: 0; visibility: hidden;">

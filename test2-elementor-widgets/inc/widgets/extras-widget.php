@@ -18,10 +18,11 @@ class Test2_Extras_Widget extends \Elementor\Widget_Base {
 	}
 
 	public function get_categories() {
-		return [ 'general' ];
+		return [ 'test2-category' ];
 	}
 
 	protected function render() {
+		test2_mark_widget_used();
 		?>
 		<div id="gl-canvas"><canvas width="491" height="1065" style="display: block; width: 100%; height: 100%; touch-action: none;" data-engine="three.js r182 webgpu"></canvas></div>
 		<div class="scrollbar scrollbar--visible"><div class="scrollbar__inner"></div><div class="scrollbar__progress" style="translate: none; rotate: none; scale: none; transform: translate3d(0px, 0px, 0px);"></div></div>
