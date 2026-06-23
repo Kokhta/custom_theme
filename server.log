@@ -1,0 +1,6 @@
+127.0.0.1 - - [23/Jun/2026 02:58:20] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [23/Jun/2026 02:58:20] code 404, message File not found
+127.0.0.1 - - [23/Jun/2026 02:58:20] "GET /Hero-Background1.m4v HTTP/1.1" 404 -
+127.0.0.1 - - [23/Jun/2026 02:59:06] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [23/Jun/2026 02:59:07] code 404, message File not found
+127.0.0.1 - - [23/Jun/2026 02:59:07] "GET /Hero-Background1.m4v HTTP/1.1" 404 -
