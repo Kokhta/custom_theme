@@ -1,0 +1,2 @@
+No syntax errors detected in fffffffffff/fffffffffff.php
+No syntax errors detected in fffffffffff/widgets/fffffffffff-widget.php
