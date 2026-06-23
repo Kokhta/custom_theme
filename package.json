@@ -1,0 +1,12 @@
+{
+  "name": "avatice-3d",
+  "version": "1.0.0",
+  "description": "Avatice 3D WebGPU Experience",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server . -p 8000"
+  },
+  "dependencies": {
+    "http-server": "^14.1.1"
+  }
+}

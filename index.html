@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avatice | آواتک - تجربه دیجیتال مارکتینگ مدرن</title>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <style>
+        body { margin: 0; padding: 0; overflow: hidden; background-color: #000; font-family: 'Vazirmatn', sans-serif; color: white; user-select: none; }
+        #canvas-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
+        #ui-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: flex; justify-content: center; align-items: center; z-index: 100; }
+        #lead-form { position: relative; background: rgba(10, 58, 90, 0.85); backdrop-filter: blur(20px); padding: 2.5rem; border-radius: 24px; border: 1px solid rgba(0, 255, 255, 0.3); width: 90%; max-width: 420px; pointer-events: all; display: none; flex-direction: column; gap: 1.2rem; box-shadow: 0 0 60px rgba(0, 255, 255, 0.15); transition: opacity 0.4s; }
+        #lead-form h2 { margin: 0 0 0.5rem 0; text-align: center; color: #00ffff; font-size: 1.8rem; }
+        #lead-form input, #lead-form select { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); padding: 1rem; border-radius: 12px; color: white; font-family: 'Vazirmatn', sans-serif; font-size: 1rem; }
+        #lead-form input::placeholder { color: rgba(255, 255, 255, 0.4); }
+        #lead-form input:focus { outline: none; border-color: #00ffff; background: rgba(255, 255, 255, 0.12); }
+        #lead-form button { background: linear-gradient(135deg, #00ffff, #0088ff); border: none; padding: 1.2rem; border-radius: 12px; color: #001a2d; font-weight: 800; cursor: pointer; font-family: 'Vazirmatn', sans-serif; font-size: 1.1rem; transition: all 0.3s; margin-top: 0.5rem; }
+        #lead-form button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 255, 255, 0.4); }
+        #lead-form .close { position: absolute; top: 15px; right: 20px; cursor: pointer; font-size: 2rem; color: rgba(255, 255, 255, 0.4); line-height: 1; }
+        #lead-form .close:hover { color: white; }
+        #webgpu-warning { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1a0000; color: #ff4444; padding: 3rem; border-radius: 20px; text-align: center; display: none; z-index: 1000; border: 2px solid #ff0000; max-width: 80%; }
+        #loading { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #00050a; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000; transition: opacity 1s; }
+        .spinner { width: 50px; height: 50px; border: 3px solid rgba(0, 255, 255, 0.1); border-top: 3px solid #00ffff; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 1rem; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.171.0/build/three.module.js",
+                "three/webgpu": "https://unpkg.com/three@0.171.0/build/three.webgpu.js",
+                "three/tsl": "https://unpkg.com/three@0.171.0/build/three.tsl.js",
+                "three/addons/": "https://unpkg.com/three@0.171.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="loading"><div class="spinner"></div><p>در حال بارگذاری دنیای آواتک...</p></div>
+    <div id="canvas-container"></div>
+    <div id="ui-layer">
+        <form id="lead-form">
+            <span class="close">&times;</span>
+            <h2>درخواست مشاوره</h2>
+            <input type="text" id="name" placeholder="نام و نام خانوادگی" required>
+            <input type="tel" id="phone" placeholder="شماره تماس" required>
+            <select id="service" required>
+                <option value="">انتخاب سرویس</option>
+                <option value="marketing">جذب مشتری (مارکتینگ)</option>
+                <option value="web">طراحی سایت</option>
+                <option value="ads">تبلیغات آنلاین</option>
+            </select>
+            <button type="submit">ثبت درخواست</button>
+        </form>
+    </div>
+    <div id="webgpu-warning">
+        <h2>خطا در اجرای WebGPU</h2>
+        <p>مرورگر شما از WebGPU پشتیبانی نمی‌کند یا این قابلیت غیرفعال است. لطفا از آخرین نسخه Google Chrome یا Microsoft Edge استفاده کنید.</p>
+    </div>
+
+    <script type="module">
+        import * as THREE from 'three/webgpu';
+        import { color, time, oscSine, float, Fn, vec2, vec3, vec4, normalWorld, positionWorld, cameraPosition, uv, texture, mix, uniform, instanceIndex, positionLocal, hash, step, smoothstep, normalView } from 'three/tsl';
+
+        let renderer, scene, camera, raycaster, mouse;
+        let currentWaypoint = 0;
+        let targetZ = -10;
+        const waypoints = [
+            { pos: new THREE.Vector3(0, 2, -5), target: new THREE.Vector3(0, 0, -15) },  // Hero
+            { pos: new THREE.Vector3(5, 1, -20), target: new THREE.Vector3(-5, 0, -30) }, // Strategy
+            { pos: new THREE.Vector3(-8, 3, -35), target: new THREE.Vector3(5, -1, -45) }, // Services
+            { pos: new THREE.Vector3(0, 5, -50), target: new THREE.Vector3(0, 0, -60) },  // Stats
+            { pos: new THREE.Vector3(10, 2, -65), target: new THREE.Vector3(-5, 0, -75) }, // Portfolio
+            { pos: new THREE.Vector3(-10, 1, -80), target: new THREE.Vector3(5, 0, -90) }, // Testimonials
+            { pos: new THREE.Vector3(0, 0, -95), target: new THREE.Vector3(0, 0, -105) }, // Diff
+            { pos: new THREE.Vector3(0, 10, -110), target: new THREE.Vector3(0, -2, -125) }, // Final
+            { pos: new THREE.Vector3(0, 2, -125), target: new THREE.Vector3(0, 0, -140) }  // Footer
+        ];
+
+        const clickables = [];
+        const textureLoader = new THREE.TextureLoader();
+
+        async function init() {
+            if (!navigator.gpu) {
+                document.getElementById('webgpu-warning').style.display = 'block';
+                document.getElementById('loading').style.display = 'none';
+                return;
+            }
+
+            renderer = new THREE.WebGPURenderer({ antialias: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setAnimationLoop(animate);
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x00050a);
+            scene.fog = new THREE.FogExp2(0x00050a, 0.025);
+
+            camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.copy(waypoints[0].pos);
+            camera.lookAt(waypoints[0].target);
+
+            raycaster = new THREE.Raycaster();
+            mouse = new THREE.Vector2();
+
+            // Lights
+            const ambient = new THREE.AmbientLight(0xffffff, 0.1);
+            scene.add(ambient);
+
+            const p1 = new THREE.PointLight(0x00ffff, 100, 50);
+            p1.position.set(10, 10, -20);
+            scene.add(p1);
+
+            const p2 = new THREE.PointLight(0xffcc00, 100, 50);
+            p2.position.set(-10, -5, -40);
+            scene.add(p2);
+
+            createParticles();
+            createEnvironment();
+            await createSections();
+
+            window.addEventListener('resize', onWindowResize);
+            window.addEventListener('wheel', onWheel);
+            window.addEventListener('click', onClick);
+            window.addEventListener('mousemove', onMouseMove);
+
+            setupForm();
+
+            document.getElementById('loading').style.opacity = '0';
+            setTimeout(() => document.getElementById('loading').style.display = 'none', 1000);
+        }
+
+        function createParticles() {
+            const count = 4000;
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(count * 3);
+            for (let i = 0; i < count; i++) {
+                positions[i * 3] = (Math.random() - 0.5) * 100;
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 100;
+                positions[i * 3 + 2] = -Math.random() * 200;
+            }
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+            const material = new THREE.PointsNodeMaterial();
+            material.transparent = true;
+            material.blending = THREE.AdditiveBlending;
+            material.depthWrite = false;
+
+            const speed = time.mul(0.1);
+            const noise = hash(instanceIndex).mul(Math.PI * 2);
+            const movement = vec3(
+                oscSine(speed.add(noise)).mul(0.5),
+                oscSine(speed.mul(1.2).add(noise)).mul(0.5),
+                0
+            );
+
+            material.positionNode = positionLocal.add(movement);
+            material.colorNode = color(0x00ffff).mul(oscSine(speed.add(instanceIndex)));
+            material.sizeNode = float(2.0);
+
+            const points = new THREE.Points(geometry, material);
+            scene.add(points);
+        }
+
+        function createEnvironment() {
+            // Ground Grid
+            const grid = new THREE.GridHelper(500, 100, 0x004466, 0x001122);
+            grid.position.y = -5;
+            scene.add(grid);
+
+            // Central Emissive Ring
+            const ringGeo = new THREE.RingGeometry(8, 8.2, 64);
+            const ringMat = new THREE.MeshBasicNodeMaterial();
+            ringMat.colorNode = color(0x00ffff).mul(oscSine(time.mul(2)).add(1.5));
+            const ring = new THREE.Mesh(ringGeo, ringMat);
+            ring.rotation.x = -Math.PI / 2;
+            ring.position.set(0, -4.9, -15);
+            scene.add(ring);
+        }
+
+        function createTextSprite(text, fontSize = 64, textColor = '#ffffff', bold = false) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.font = `${bold ? 'bold ' : ''}${fontSize}px Vazirmatn`;
+            const metrics = ctx.measureText(text);
+            canvas.width = metrics.width + 20;
+            canvas.height = fontSize * 1.5;
+
+            ctx.font = `${bold ? 'bold ' : ''}${fontSize}px Vazirmatn`;
+            ctx.fillStyle = textColor;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.direction = 'rtl';
+            ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+
+            const tex = new THREE.CanvasTexture(canvas);
+            const mat = new THREE.SpriteNodeMaterial();
+            mat.colorNode = texture(tex);
+            mat.transparent = true;
+
+            const sprite = new THREE.Sprite(mat);
+            sprite.scale.set(canvas.width / 100, canvas.height / 100, 1);
+            return sprite;
+        }
+
+        function createTSLMaterial(baseColor, emissiveColor) {
+            const material = new THREE.MeshStandardNodeMaterial();
+            material.colorNode = color(baseColor);
+
+            const fresnel = Fn(() => {
+                const viewDir = cameraPosition.sub(positionWorld).normalize();
+                const nDotV = normalWorld.dot(viewDir).saturate();
+                return float(1.0).sub(nDotV).pow(3.0);
+            });
+
+            material.emissiveNode = color(emissiveColor).mul(fresnel().mul(oscSine(time).add(1.2)));
+            return material;
+        }
+
+        async function createSections() {
+            // HERO
+            const logoTex = textureLoader.load('https://avatice.com/wp-content/uploads/2023/01/LOGO22.png');
+            const logoGeo = new THREE.PlaneGeometry(5, 2);
+            const logoMat = new THREE.MeshBasicNodeMaterial();
+            logoMat.colorNode = texture(logoTex);
+            logoMat.transparent = true;
+            const logo = new THREE.Mesh(logoGeo, logoMat);
+            logo.position.set(0, 5, -15);
+            scene.add(logo);
+
+            const video = document.createElement('video');
+            video.src = 'Hero-Background1.m4v';
+            video.muted = true;
+            video.loop = true;
+            video.play().catch(() => {
+                // Fallback or muted play required by browsers
+                window.addEventListener('click', () => video.play(), { once: true });
+            });
+            const videoTex = new THREE.VideoTexture(video);
+            const screenGeo = new THREE.CylinderGeometry(10, 10, 8, 32, 1, true, -Math.PI/4, Math.PI/2);
+            const screenMat = new THREE.MeshBasicNodeMaterial();
+            screenMat.colorNode = texture(videoTex);
+            screenMat.side = THREE.DoubleSide;
+            const screen = new THREE.Mesh(screenGeo, screenMat);
+            screen.position.set(0, 0, -25);
+            screen.rotation.y = Math.PI;
+            scene.add(screen);
+
+            const h1 = createTextSprite("جذب منظم و هفتگی مشتریان جدید", 80, "#00ffff", true);
+            h1.position.set(0, 1, -14);
+            scene.add(h1);
+
+            const h2 = createTextSprite("%100 تــســت شـــده", 50, "#ffffff");
+            h2.position.set(0, -0.5, -14);
+            scene.add(h2);
+
+            const btn1 = createButton("شروع همکاری", () => showForm());
+            btn1.position.set(0, -2.5, -13);
+            scene.add(btn1);
+
+            // STRATEGY
+            const stratThumb = textureLoader.load('https://static.cdn.asset.aparat.cloud/avt/62623177-4816-l__6002.jpg');
+            const stratPlane = new THREE.Mesh(new THREE.PlaneGeometry(8, 4.5), new THREE.MeshBasicMaterial({ map: stratThumb }));
+            stratPlane.position.set(-5, 0, -30);
+            scene.add(stratPlane);
+
+            const playBtn = createButton("▶", () => window.open('https://www.aparat.com/v/yta05fa'), 0.8);
+            playBtn.position.set(-5, 0, -29.5);
+            scene.add(playBtn);
+
+            const stratTitle = createTextSprite("دیگه طراحی سایت و اجرا تبلیغات جواب نمیده", 60);
+            stratTitle.position.set(3, 0, -30);
+            scene.add(stratTitle);
+
+            // SERVICES
+            const m1 = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 6, 32), createTSLMaterial(0x0a3a5a, 0x00ffff));
+            m1.position.set(-3, 0, -45);
+            scene.add(m1);
+            const m1Label = createTextSprite("🎯 جذب مخاطب آنلاین", 50);
+            m1Label.position.set(-3, 4, -45);
+            scene.add(m1Label);
+
+            const m2 = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 6, 32), createTSLMaterial(0x1a3050, 0x00ffff));
+            m2.position.set(3, 0, -45);
+            scene.add(m2);
+            const m2Label = createTextSprite("🌐 طراحی سایت", 50);
+            m2Label.position.set(3, 4, -45);
+            scene.add(m2Label);
+
+            // STATS
+            const statData = ["۷ سال تجربه", "۹۵ پروژه", "۲ سرویس", "از ۱۳۹۸"];
+            statData.forEach((s, i) => {
+                const col = new THREE.Mesh(new THREE.BoxGeometry(2, 4, 1), createTSLMaterial(0x001a2d, 0x00ffff));
+                col.position.set(-6 + i * 4, -2, -60);
+                scene.add(col);
+                const txt = createTextSprite(s, 40);
+                txt.position.set(-6 + i * 4, 1, -60);
+                scene.add(txt);
+            });
+
+            // PORTFOLIO
+            const portImages = [
+                'https://avatice.com/wp-content/uploads/2025/01/1113-1.jpg',
+                'https://avatice.com/wp-content/uploads/2025/01/portfolio-5-1.jpg',
+                'https://avatice.com/wp-content/uploads/2025/01/portfolio-2-1.jpg'
+            ];
+            portImages.forEach((url, i) => {
+                const tex = textureLoader.load(url);
+                const frame = new THREE.Mesh(new THREE.BoxGeometry(5.2, 3.2, 0.2), new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 1, roughness: 0.2 }));
+                frame.position.set(-6 + i * 6, Math.sin(i) * 2, -75);
+                scene.add(frame);
+                const img = new THREE.Mesh(new THREE.PlaneGeometry(5, 3), new THREE.MeshBasicMaterial({ map: tex }));
+                img.position.copy(frame.position);
+                img.position.z += 0.11;
+                scene.add(img);
+            });
+
+            // TESTIMONIALS
+            for(let i=0; i<2; i++) {
+                const card = new THREE.Mesh(new THREE.PlaneGeometry(6, 3), new THREE.MeshBasicNodeMaterial({ color: 0x001a2d, transparent: true, opacity: 0.8 }));
+                card.position.set(i === 0 ? -5 : 5, 0, -90);
+                scene.add(card);
+                const quote = createTextSprite(i === 0 ? "بهترین تجربه همکاری ما" : "نتایج فراتر از انتظار بود", 40);
+                quote.position.copy(card.position);
+                quote.position.z += 0.1;
+                scene.add(quote);
+            }
+
+            // DIFF
+            const diffTex = textureLoader.load('https://avatice.com/wp-content/uploads/2025/01/%D9%88%D8%A8-%D8%B3%D8%A7%DB%8C%D8%AA-%D8%A2%D9%88%D8%A7%D8%AA%DA%A9.webp');
+            const diffPlane = new THREE.Mesh(new THREE.PlaneGeometry(10, 6), new THREE.MeshBasicMaterial({ map: diffTex }));
+            diffPlane.position.set(0, 0, -105);
+            scene.add(diffPlane);
+            const diffMsg = createTextSprite("متفاوت نبودن یعنی خودکشی !", 70, "#ff0000", true);
+            diffMsg.position.set(0, 4, -105);
+            scene.add(diffMsg);
+
+            // FINAL CTA (Whale)
+            const whaleBody = new THREE.Mesh(new THREE.SphereGeometry(3, 32, 32), createTSLMaterial(0x0a3a5a, 0x00ffff));
+            whaleBody.scale.set(1, 0.6, 2);
+            whaleBody.position.set(0, 0, -125);
+            scene.add(whaleBody);
+
+            const whaleTail = new THREE.Mesh(new THREE.ConeGeometry(2, 4, 32), createTSLMaterial(0x0a3a5a, 0x00ffff));
+            whaleTail.position.set(0, 0, -120);
+            whaleTail.rotation.x = Math.PI/2;
+            const finMat = createTSLMaterial(0x0a3a5a, 0x00ffff);
+            const leftFin = new THREE.Mesh(new THREE.BoxGeometry(2, 0.2, 1), finMat);
+            leftFin.position.set(-3, 0, -125);
+            leftFin.rotation.z = 0.5;
+            scene.add(leftFin);
+            const rightFin = new THREE.Mesh(new THREE.BoxGeometry(2, 0.2, 1), finMat);
+            rightFin.position.set(3, 0, -125);
+            rightFin.rotation.z = -0.5;
+            scene.add(rightFin);
+            scene.add(whaleTail);
+
+            const huntMsg = createTextSprite("ما فرصت‌ها را شکار می‌کنیم", 70, "#00ffff", true);
+            huntMsg.position.set(0, 5, -125);
+            scene.add(huntMsg);
+
+            const btnFinal = createButton("درخواست مشاوره فوری", () => showForm());
+            btnFinal.position.set(0, -5, -125);
+            scene.add(btnFinal);
+
+            // FOOTER
+            const footerLogo = logo.clone();
+            footerLogo.position.set(0, 0, -140);
+            scene.add(footerLogo);
+            const footerTxt = createTextSprite("تمامی حقوق برای آواتک محفوظ است ۱۴۰۳", 30, "rgba(255,255,255,0.5)");
+            footerTxt.position.set(0, -2, -140);
+            scene.add(footerTxt);
+        }
+
+        function createButton(text, onClick, scale = 1) {
+            const group = new THREE.Group();
+            const btnGeo = new THREE.CylinderGeometry(1.5 * scale, 1.5 * scale, 0.5 * scale, 32);
+            const btnMat = createTSLMaterial(0x00ffff, 0x0088ff);
+            const mesh = new THREE.Mesh(btnGeo, btnMat);
+            mesh.rotation.x = Math.PI / 2;
+            group.add(mesh);
+
+            const label = createTextSprite(text, 50 * scale, "#001a2d", true);
+            label.position.z = 0.3 * scale;
+            group.add(label);
+
+            mesh.userData.callback = onClick;
+            clickables.push(mesh);
+            return group;
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function onWheel(e) {
+            if (document.getElementById('lead-form').style.display === 'flex') return;
+            if (e.deltaY > 0) currentWaypoint = Math.min(currentWaypoint + 1, waypoints.length - 1);
+            else currentWaypoint = Math.max(currentWaypoint - 1, 0);
+        }
+
+        function onClick(e) {
+            mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(clickables);
+            if (intersects.length > 0) {
+                intersects[0].object.userData.callback();
+            } else if (document.getElementById('lead-form').style.display !== 'flex') {
+                currentWaypoint = Math.min(currentWaypoint + 1, waypoints.length - 1);
+            }
+        }
+
+        function onMouseMove(e) {
+            mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+        }
+
+        function showForm() {
+            const form = document.getElementById('lead-form');
+            form.style.display = 'flex';
+            form.style.opacity = '0';
+            setTimeout(() => form.style.opacity = '1', 10);
+        }
+
+        function setupForm() {
+            const form = document.getElementById('lead-form');
+            const close = form.querySelector('.close');
+            close.onclick = () => form.style.display = 'none';
+
+            form.onsubmit = (e) => {
+                e.preventDefault();
+                alert('درخواست شما با موفقیت ثبت شد. کارشناسان ما به زودی با شما تماس خواهند گرفت.');
+                form.reset();
+                form.style.display = 'none';
+            };
+        }
+
+        function animate() {
+            const wp = waypoints[currentWaypoint];
+            camera.position.lerp(wp.pos.clone().add(new THREE.Vector3(mouse.x * 2, mouse.y * 2, 0)), 0.05);
+
+            const currentLookAt = new THREE.Vector3();
+            camera.getWorldDirection(currentLookAt);
+            const targetDir = wp.target.clone().sub(camera.position).normalize();
+            const lookAtLerp = new THREE.Vector3().lerpVectors(currentLookAt, targetDir, 0.05);
+            camera.lookAt(camera.position.clone().add(lookAtLerp));
+
+            renderer.render(scene, camera);
+        }
+
+        init();
+    </script>
+</body>
+</html>
