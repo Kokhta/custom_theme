@@ -9,8 +9,8 @@ export const Stats = () => {
   const scroll = useScroll();
   const groupRef = useRef<THREE.Group>(null);
 
-  // Using a font that supports Persian characters for 3D text
-  const jsonFontUrl = "https://raw.githubusercontent.com/mrdoob/three.js/master/examples/fonts/helvetiker_bold.typeface.json";
+  // Using standard Text (Troika) for Persian numbers to ensure correct glyph rendering
+  // as most JSON fonts don't support Persian.
 
   const stats = useMemo(() => [
     { label: "سال تاسیس", value: "۱۳۹۸", pos: [-3, 0, 0], color: "#00A4FF", delay: 0 },
@@ -48,20 +48,17 @@ export const Stats = () => {
       <group ref={groupRef}>
         {stats.map((stat, i) => (
           <group key={i} position={[stat.pos[0], 0, stat.pos[2]]}>
-            <Center top position={[0, 1.5, 0]}>
-              <Text3D
-                font={jsonFontUrl}
-                size={0.8}
-                height={0.2}
-                curveSegments={12}
-                bevelEnabled
-                bevelThickness={0.05}
-                bevelSize={0.03}
-              >
-                {stat.value}
-                <meshStandardMaterial color={stat.color} emissive={stat.color} emissiveIntensity={2} />
-              </Text3D>
-            </Center>
+            <Text
+              position={[0, 1.5, 0]}
+              fontSize={1.2}
+              color={stat.color}
+              font="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/ttf/Vazirmatn-Regular.ttf"
+              anchorX="center"
+              anchorY="middle"
+            >
+              {stat.value}
+              <meshStandardMaterial color={stat.color} emissive={stat.color} emissiveIntensity={2} />
+            </Text>
             <Text
               position={[0, 0, 0]}
               fontSize={0.4}

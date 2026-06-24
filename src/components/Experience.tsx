@@ -1,15 +1,96 @@
 "use client";
 
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { ScrollControls, useScroll, Environment, ContactShadows, Html, Stars } from "@react-three/drei";
-import { Suspense, useRef } from "react";
+import { ScrollControls, useScroll, Environment, ContactShadows, Html, Stars, useTexture } from "@react-three/drei";
+import { Suspense, useRef, useMemo } from "react";
 import * as THREE from "three";
-import { Bloom, EffectComposer } from "@react-three/postprocessing";
+import { Bloom, EffectComposer, ChromaticAberration, Noise, Vignette } from "@react-three/postprocessing";
 import { Hero } from "./Hero";
 import { Services } from "./Services";
 import { Clients } from "./Clients";
 import { Stats } from "./Stats";
 import { Portfolio } from "./Portfolio";
+
+const NebulaBackground = () => {
+  const meshRef = useRef<THREE.Mesh>(null);
+
+  const shaderArgs = useMemo(() => ({
+    uniforms: {
+      uTime: { value: 0 },
+      uColor1: { value: new THREE.Color("#001529") },
+      uColor2: { value: new THREE.Color("#004E8C") },
+      uColor3: { value: new THREE.Color("#00A4FF") },
+    },
+    vertexShader: `
+      varying vec2 vUv;
+      void main() {
+        vUv = uv;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform float uTime;
+      uniform vec3 uColor1;
+      uniform vec3 uColor2;
+      uniform vec3 uColor3;
+      varying vec2 vUv;
+
+      float noise(vec2 p) {
+        return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
+      }
+
+      void main() {
+        vec2 p = vUv * 2.0 - 1.0;
+        float t = uTime * 0.1;
+
+        float n = noise(p + t);
+        float dist = length(p);
+
+        vec3 color = mix(uColor1, uColor2, dist + n * 0.2);
+        color = mix(color, uColor3, max(0.0, 1.0 - dist * 2.0) * 0.5);
+
+        gl_FragColor = vec4(color, 1.0);
+      }
+    `,
+  }), []);
+
+  useFrame((state) => {
+    if (meshRef.current) {
+      (meshRef.current.material as THREE.ShaderMaterial).uniforms.uTime.value = state.clock.elapsedTime;
+    }
+  });
+
+  return (
+    <mesh ref={meshRef} scale={[100, 100, 1]}>
+      <planeGeometry />
+      <shaderMaterial
+        args={[shaderArgs]}
+        side={THREE.BackSide}
+        depthWrite={false}
+      />
+    </mesh>
+  );
+};
+
+const CustomCursor = () => {
+  const cursorRef = useRef<THREE.Mesh>(null);
+
+  useFrame((state) => {
+    if (cursorRef.current) {
+      const { x, y } = state.pointer;
+      // Convert pointer to world coords (rough estimate for overlay)
+      cursorRef.current.position.set(x * 5, y * 3, 5);
+      cursorRef.current.scale.setScalar(THREE.MathUtils.lerp(cursorRef.current.scale.x, 1.0, 0.1));
+    }
+  });
+
+  return (
+    <mesh ref={cursorRef}>
+      <ringGeometry args={[0.1, 0.12, 32]} />
+      <meshStandardMaterial color="#00A4FF" emissive="#00A4FF" emissiveIntensity={2} transparent opacity={0.6} />
+    </mesh>
+  );
+};
 
 const Scene = () => {
   const scroll = useScroll();
@@ -41,6 +122,8 @@ const Scene = () => {
 
   return (
     <group ref={groupRef}>
+      <CustomCursor />
+      <NebulaBackground />
       <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
       <Hero />
       <Services />
@@ -96,6 +179,9 @@ export default function Experience() {
 
           <EffectComposer>
             <Bloom intensity={1.5} luminanceThreshold={0.9} radius={0.5} />
+            <ChromaticAberration offset={new THREE.Vector2(0.002, 0.002)} />
+            <Noise opacity={0.05} />
+            <Vignette eskil={false} offset={0.1} darkness={1.1} />
           </EffectComposer>
         </Suspense>
       </Canvas>

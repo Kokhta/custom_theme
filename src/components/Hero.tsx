@@ -28,6 +28,16 @@ export const Hero = () => {
     config: { duration: 10000 },
   });
 
+  // Spring-based physics for mouse response
+  const [spring, setSpring] = useSpring(() => ({
+    mousePos: [0, 0, 0],
+    config: { mass: 1, tension: 120, friction: 14 }
+  }));
+
+  useFrame((state) => {
+    setSpring.start({ mousePos: [state.pointer.x * 2, state.pointer.y * 2, 0] });
+  });
+
   return (
     <group>
       {/* Animated Logo Placeholder */}
@@ -46,20 +56,22 @@ export const Hero = () => {
         </Text>
       </animated.group>
 
-      {/* Social Icons Orbiting */}
+      {/* Social Icons Orbiting with Physics-like response */}
       <animated.group rotation-y={orbitRot}>
-        <Float speed={2} rotationIntensity={1} floatIntensity={1}>
-          <mesh position={[3, 0, 0]}>
-            <sphereGeometry args={[0.2, 32, 32]} />
-            <meshStandardMaterial color="#22C55E" emissive="#22C55E" emissiveIntensity={0.5} />
-          </mesh>
-        </Float>
-        <Float speed={1.5} rotationIntensity={2} floatIntensity={0.5}>
-          <mesh position={[-3, 1, 0]}>
-            <boxGeometry args={[0.3, 0.3, 0.3]} />
-            <meshStandardMaterial color="#00A4FF" emissive="#00A4FF" emissiveIntensity={0.5} />
-          </mesh>
-        </Float>
+        <animated.group position={spring.mousePos as any}>
+          <Float speed={2} rotationIntensity={1} floatIntensity={1}>
+            <mesh position={[3, 0, 0]}>
+              <sphereGeometry args={[0.2, 32, 32]} />
+              <meshStandardMaterial color="#22C55E" emissive="#22C55E" emissiveIntensity={0.5} />
+            </mesh>
+          </Float>
+          <Float speed={1.5} rotationIntensity={2} floatIntensity={0.5}>
+            <mesh position={[-3, 1, 0]}>
+              <boxGeometry args={[0.3, 0.3, 0.3]} />
+              <meshStandardMaterial color="#00A4FF" emissive="#00A4FF" emissiveIntensity={0.5} />
+            </mesh>
+          </Float>
+        </animated.group>
       </animated.group>
 
       {/* Glassmorphism Registration Form */}
