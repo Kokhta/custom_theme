@@ -1,17 +1,14 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
-}
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 class Widget_2_Home extends \Elementor\Widget_Base {
-
 	public function get_name() { return '2-home'; }
-	public function get_title() { return esc_html__( '2-Home', 'kriss' ); }
+	public function get_title() { return '2-Home'; }
 	public function get_icon() { return 'eicon-home'; }
 	public function get_categories() { return [ 'general' ]; }
 
 	protected function register_controls() {
-		$this->start_controls_section('section_home', ['label' => esc_html__( 'Home', 'kriss' )]);
+		$this->start_controls_section('section_home', ['label' => 'Home']);
 		$this->add_control('greeting', ['label' => 'Greeting', 'type' => \Elementor\Controls_Manager::TEXT, 'default' => "Hi, I'm Kriss."]);
 		$this->add_control('description', ['label' => 'Description', 'type' => \Elementor\Controls_Manager::TEXT, 'default' => "An AI chatbot for "]);
 		$this->add_control('cta', ['label' => 'CTA', 'type' => \Elementor\Controls_Manager::TEXT, 'default' => "Learn More"]);
@@ -101,12 +98,6 @@ class Widget_2_Home extends \Elementor\Widget_Base {
 			],
 		]);
 		$this->end_controls_section();
-
-        $this->start_controls_section('section_meta', ['label' => 'Meta Data']);
-		$this->add_control('metaTitle', ['label' => 'Meta Title', 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'Kriss.ai']);
-		$this->add_control('metaDescription', ['label' => 'Meta Description', 'type' => \Elementor\Controls_Manager::TEXTAREA, 'default' => 'An AI chatbot for healthcare professionals.']);
-		$this->add_control('metaURL', ['label' => 'Meta URL', 'type' => \Elementor\Controls_Manager::TEXT, 'default' => 'https://kriss.ai']);
-		$this->end_controls_section();
 	}
 
 	protected function render() {
@@ -116,27 +107,24 @@ class Widget_2_Home extends \Elementor\Widget_Base {
 			$intro[] = ['children' => [['text' => $line['text']]]];
 		}
 		$data = [
-            'home' => [
-                'greeting' => $settings['greeting'],
-                'description' => $settings['description'],
-                'industries' => $settings['industries'],
-                'commonCopy' => $settings['commonCopy'],
-                'globalType' => 'home',
-                'cta' => $settings['cta'],
-                'introduction' => $intro,
-                'scrollPrompt' => $settings['scrollPrompt'],
-                'metaTitle' => $settings['metaTitle'],
-                'metaDescription' => $settings['metaDescription'],
-                'metaURL' => $settings['metaURL'],
-                'metaShareImage' => [ 'url' => '/media/share-image-1.jpg' ],
-            ]
+			'greeting' => $settings['greeting'],
+			'description' => $settings['description'],
+			'industries' => $settings['industries'],
+			'commonCopy' => $settings['commonCopy'],
+			'cta' => $settings['cta'],
+			'introduction' => $intro,
+			'scrollPrompt' => $settings['scrollPrompt'],
+			'metaTitle' => 'Kriss.ai',
+			'metaDescription' => 'An AI chatbot for healthcare professionals.',
+            'metaURL' => 'https://kriss.ai',
+            'metaShareImage' => [ 'url' => '/media/share-image-1.jpg' ],
+            'globalType' => 'home'
 		];
 		Kriss_Data_Collector::get_instance()->set_data('home', $data);
 		?>
         <div class="kriss-home-container" style="display:none;">
             <h1><?php echo esc_html($settings['greeting']); ?></h1>
             <p><?php echo esc_html($settings['description']); ?></p>
-            <button><?php echo esc_html($settings['cta']); ?></button>
         </div>
         <?php
 	}

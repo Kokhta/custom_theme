@@ -30,14 +30,14 @@ function kriss_copy_res_to_root() {
 
         if ( $file->isDir() ) {
             if ( ! is_dir( $dest_path ) ) {
-                mkdir( $dest_path, 0755, true );
+                @mkdir( $dest_path, 0755, true );
             }
         } else {
             $dest_dir = dirname( $dest_path );
             if ( ! is_dir( $dest_dir ) ) {
-                mkdir( $dest_dir, 0755, true );
+                @mkdir( $dest_dir, 0755, true );
             }
-            copy( $file->getRealPath(), $dest_path );
+            @copy( $file->getRealPath(), $dest_path );
         }
     }
 }
@@ -65,36 +65,15 @@ class Kriss_Data_Collector {
 
 // Elementor Widget Registration
 function register_kriss_widgets( $widgets_manager ) {
-    require_once( get_template_directory() . '/widgets/1-experience.php' );
-    require_once( get_template_directory() . '/widgets/2-home.php' );
-    require_once( get_template_directory() . '/widgets/3-front-desk.php' );
-    require_once( get_template_directory() . '/widgets/4-consultation-room.php' );
-    require_once( get_template_directory() . '/widgets/5-surgery-room.php' );
-    require_once( get_template_directory() . '/widgets/6-doctors-office.php' );
-    require_once( get_template_directory() . '/widgets/7-server-room.php' );
-    require_once( get_template_directory() . '/widgets/8-administration-room.php' );
-    require_once( get_template_directory() . '/widgets/9-aftercare.php' );
-    require_once( get_template_directory() . '/widgets/10-setup.php' );
-    require_once( get_template_directory() . '/widgets/11-plans.php' );
-    require_once( get_template_directory() . '/widgets/12-about.php' );
-    require_once( get_template_directory() . '/widgets/13-faq.php' );
-    require_once( get_template_directory() . '/widgets/14-privacy-policy.php' );
-    require_once( get_template_directory() . '/widgets/15-terms-conditions.php' );
-
-    $widgets_manager->register( new \Widget_1_Experience() );
-    $widgets_manager->register( new \Widget_2_Home() );
-    $widgets_manager->register( new \Widget_3_Front_Desk() );
-    $widgets_manager->register( new \Widget_4_Consultation_Room() );
-    $widgets_manager->register( new \Widget_5_Surgery_Room() );
-    $widgets_manager->register( new \Widget_6_Doctors_Office() );
-    $widgets_manager->register( new \Widget_7_Server_Room() );
-    $widgets_manager->register( new \Widget_8_Administration_Room() );
-    $widgets_manager->register( new \Widget_9_Aftercare() );
-    $widgets_manager->register( new \Widget_10_Setup() );
-    $widgets_manager->register( new \Widget_11_Plans() );
-    $widgets_manager->register( new \Widget_12_About() );
-    $widgets_manager->register( new \Widget_13_FAQ() );
-    $widgets_manager->register( new \Widget_14_Privacy_Policy() );
-    $widgets_manager->register( new \Widget_15_Terms_Conditions() );
+    $widget_files = glob( get_template_directory() . '/widgets/*.php' );
+    foreach ( $widget_files as $file ) {
+        require_once( $file );
+        $base_name = basename( $file, '.php' );
+        // Convert '1-experience' to 'Widget_1_Experience'
+        $class_name = 'Widget_' . str_replace( '-', '_', ucwords( $base_name, '-' ) );
+        if ( class_exists( $class_name ) ) {
+            $widgets_manager->register( new $class_name() );
+        }
+    }
 }
 add_action( 'elementor/widgets/register', 'register_kriss_widgets' );

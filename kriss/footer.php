@@ -1,25 +1,26 @@
 </div> <!-- end display contents -->
 <?php
 $data_collector = Kriss_Data_Collector::get_instance();
-$collected_data = $data_collector->get_all_data();
+$collected = $data_collector->get_all_data();
 
-// Structure based on the source HTML
-$final_data = [
-    "cms" => isset($collected_data['home']) ? $collected_data['home'] : []
-];
+// The source HTML shows data structured with keys like "home", "front-desk", etc.
+// In the source HTML, home is inside cms, and other keys are siblings of cms.
+// Actually, let me re-check the source JSON structure.
+// "data":[null,{"type":"data","data":{cms:{home:{...}, "front-desk":{...}, ...}}, "locale":"en"}, "uses":{}, null]
+// Wait, looking closer at the source:
+// {"type":"data","data":{cms:{home:{...}, "front-desk":{...}, ...}}, "locale":"en"}
+// Yes, everything is inside 'cms'.
 
-// Sections that should be at the top level of data.data
-$top_level_sections = [
-    'front-desk', 'consultation-room', 'surgery-room', 'doctors-office',
+$cms_data = [];
+$sections = [
+    'home', 'front-desk', 'consultation-room', 'surgery-room', 'doctors-office',
     'server-room', 'administration-room', 'aftercare', 'setup',
     'plans', 'about', 'faq', 'privacy-policy', 'terms-and-conditions'
 ];
 
-foreach ( $top_level_sections as $section ) {
-    if ( isset($collected_data[$section]) ) {
-        $final_data[$section] = $collected_data[$section];
-    } else {
-        $final_data[$section] = [];
+foreach ($sections as $s) {
+    if (isset($collected[$s])) {
+        $cms_data[$s] = $collected[$s];
     }
 }
 
@@ -27,7 +28,10 @@ $json_data = json_encode([
     null,
     [
         "type" => "data",
-        "data" => array_merge($final_data, ["locale" => "en"]),
+        "data" => [
+            "cms" => $cms_data,
+            "locale" => "en"
+        ],
         "uses" => (object)[]
     ],
     null
@@ -35,13 +39,12 @@ $json_data = json_encode([
 ?>
 <script>
     {
-        window.__sveltekit_nybw8 = {
+        __sveltekit_nybw8 = {
             base: new URL(".", location).pathname.slice(0, -1)
         };
 
-        const data = <?php echo $json_data; ?>;
-
         const element = document.querySelector('div[style="display: contents"]');
+        const data = <?php echo $json_data; ?>;
 
         Promise.all([
             import("<?php echo esc_url( home_url( '_app/immutable/entry/start.Ry2uuYv8.js' ) ); ?>"),
