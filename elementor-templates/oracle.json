@@ -1,0 +1,39 @@
+{
+  "title": "Olympus - Oracle",
+  "type": "page",
+  "version": "0.4",
+  "page_settings": [],
+  "content": [
+    {
+      "id": "20d8ee6d",
+      "elType": "section",
+      "isInner": false,
+      "settings": {
+        "structure": "10"
+      },
+      "elements": [
+        {
+          "id": "21012e53",
+          "elType": "column",
+          "isInner": false,
+          "settings": {
+            "_column_size": 100,
+            "structure": "10"
+          },
+          "elements": [
+            {
+              "id": "c947838c",
+              "elType": "widget",
+              "widgetType": "html",
+              "isInner": false,
+              "settings": {
+                "html": "\n<style>\n    /* \u2500\u2500 Reset \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */\n    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }\n    html { scroll-behavior: auto; }\n\n    /* \u2500\u2500 Tokens \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */\n    :root {\n      --bg:          #F5EDD6;\n      --bg-alt:      #EDE5C8;\n      --bg-card:     rgba(255, 253, 245, 0.88);\n      --text:        #1A0E05;\n      --text-muted:  #7A6244;\n      --text-faint:  #B0946A;\n      --gold:        #C9A227;\n      --gold-lt:     #E8C84A;\n      --gold-dk:     #9A7510;\n      --gold-dim:    rgba(201,162,39,0.30);\n      --gold-glow:   rgba(201,162,39,0.12);\n      --border:      rgba(201,162,39,0.22);\n      --tt: 1.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);\n    }\n    [data-theme=\"dark\"] {\n      --bg:          #05050C;\n      --bg-alt: #0A0A18;\n      --bg-card: rgba(12, 12, 24, 0.92);\n      --text: #EAE0C8;\n      --text-muted: #9B8A6E;\n      --text-faint: #6B5A44;\n      --gold: #D4AF37;\n      --gold-lt: #F0D060;\n      --gold-dk: #B08820;\n      --gold-dim: rgba(212,175,55,0.28);\n      --gold-glow: rgba(212,175,55,0.09);\n      --border: rgba(212,175,55,0.18);\n    }\n\n    body {\n      background: var(--bg);\n      color: var(--text);\n      font-family: 'Cormorant Garamond', Georgia, serif;\n      overflow-x: hidden;\n      transition: background var(--tt), color var(--tt);\n    }\n\n    ::-webkit-scrollbar { width: 5px; }\n    ::-webkit-scrollbar-track { background: var(--bg); }\n    ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }\n    ::-webkit-scrollbar-thumb:hover { background: var(--gold); }\n\n    .reveal { opacity: 0; transform: translateY(38px); }\n</style>\n<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n<link href=\"https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&display=swap\" rel=\"stylesheet\">\n<script src=\"https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js\"></script>\n<script src=\"https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js\"></script>\n\n<style>\n    .oracle { padding: 10rem 4rem; background: var(--bg-alt); text-align: center; position: relative; overflow: hidden; transition: background var(--tt); }\n    .oracle-bg { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-family: 'Cinzel Decorative', serif; font-size: 14vw; font-weight: 900; color: var(--gold); opacity: .055; white-space: nowrap; pointer-events: none; user-select: none; transition: color var(--tt); }\n    .oracle-inner { position: relative; z-index: 1; max-width: 780px; margin: 0 auto; }\n    .oracle-icon { font-size: 2.6rem; display: block; margin-bottom: 1.8rem; }\n    .oracle-quote { font-size: clamp(1.45rem, 3.5vw, 2.45rem); font-style: italic; font-weight: 300; color: var(--text); line-height: 1.62; transition: color var(--tt); }\n    .oracle-quote em { color: var(--gold); font-style: normal; }\n    .oracle-attr { font-family: 'Cinzel', serif; font-size: .63rem; letter-spacing: .5em; color: var(--text-muted); text-transform: uppercase; transition: color var(--tt); }\n</style>\n<section class=\"oracle\" id=\"oracle\">\n  <div class=\"oracle-bg\">\u03a7\u03a1\u0397\u03a3\u039c\u039f\u03a3</div>\n  <div class=\"oracle-inner\">\n    <span class=\"oracle-icon reveal\">\ud83c\udfdb\ufe0f</span>\n    <div class=\"sec-label reveal\">The Oracle of Delphi</div>\n    <div class=\"g-rule reveal\">\n      <div class=\"g-rule-line\"></div>\n      <div class=\"g-rule-sym\">\u2726</div>\n      <div class=\"g-rule-line rev\"></div>\n    </div>\n    <p class=\"oracle-quote reveal\">\"Know thyself. Nothing in excess.<br><em>Certainty brings insanity.</em>\"</p>\n    <div class=\"g-rule reveal\">\n      <div class=\"g-rule-line\"></div>\n      <div class=\"g-rule-sym\">\u2726</div>\n      <div class=\"g-rule-line rev\"></div>\n    </div>\n    <div class=\"oracle-attr reveal\">\u2014 The Three Maxims of Delphi</div>\n  </div>\n</section>\n"
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
