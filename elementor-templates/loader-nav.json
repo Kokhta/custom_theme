@@ -1,0 +1,39 @@
+{
+  "title": "Olympus - Loader Nav",
+  "type": "page",
+  "version": "0.4",
+  "page_settings": [],
+  "content": [
+    {
+      "id": "2be50483",
+      "elType": "section",
+      "isInner": false,
+      "settings": {
+        "structure": "10"
+      },
+      "elements": [
+        {
+          "id": "829293b4",
+          "elType": "column",
+          "isInner": false,
+          "settings": {
+            "_column_size": 100,
+            "structure": "10"
+          },
+          "elements": [
+            {
+              "id": "7f718d02",
+              "elType": "widget",
+              "widgetType": "html",
+              "isInner": false,
+              "settings": {
+                "html": "\n<style>\n    /* \u2500\u2500 Reset \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */\n    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }\n    html { scroll-behavior: auto; }\n\n    /* \u2500\u2500 Tokens \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */\n    :root {\n      --bg:          #F5EDD6;\n      --bg-alt:      #EDE5C8;\n      --bg-card:     rgba(255, 253, 245, 0.88);\n      --text:        #1A0E05;\n      --text-muted:  #7A6244;\n      --text-faint:  #B0946A;\n      --gold:        #C9A227;\n      --gold-lt:     #E8C84A;\n      --gold-dk:     #9A7510;\n      --gold-dim:    rgba(201,162,39,0.30);\n      --gold-glow:   rgba(201,162,39,0.12);\n      --border:      rgba(201,162,39,0.22);\n      --tt: 1.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);\n    }\n    [data-theme=\"dark\"] {\n      --bg:          #05050C;\n      --bg-alt: #0A0A18;\n      --bg-card: rgba(12, 12, 24, 0.92);\n      --text: #EAE0C8;\n      --text-muted: #9B8A6E;\n      --text-faint: #6B5A44;\n      --gold: #D4AF37;\n      --gold-lt: #F0D060;\n      --gold-dk: #B08820;\n      --gold-dim: rgba(212,175,55,0.28);\n      --gold-glow: rgba(212,175,55,0.09);\n      --border: rgba(212,175,55,0.18);\n    }\n\n    body {\n      background: var(--bg);\n      color: var(--text);\n      font-family: 'Cormorant Garamond', Georgia, serif;\n      overflow-x: hidden;\n      transition: background var(--tt), color var(--tt);\n    }\n\n    ::-webkit-scrollbar { width: 5px; }\n    ::-webkit-scrollbar-track { background: var(--bg); }\n    ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }\n    ::-webkit-scrollbar-thumb:hover { background: var(--gold); }\n\n    .reveal { opacity: 0; transform: translateY(38px); }\n</style>\n<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n<link href=\"https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&display=swap\" rel=\"stylesheet\">\n<script src=\"https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js\"></script>\n<script src=\"https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js\"></script>\n\n<style>\n    /* \u2500\u2500 Loading \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */\n    #loader {\n      position: fixed; inset: 0; z-index: 9999;\n      background: #030308;\n      display: flex; flex-direction: column;\n      align-items: center; justify-content: center; gap: 1.8rem;\n      transition: opacity 0.9s ease, visibility 0.9s ease;\n    }\n    #loader.out { opacity: 0; visibility: hidden; pointer-events: none; }\n    .loader-title {\n      font-family: 'Cinzel Decorative', serif;\n      font-size: clamp(1.8rem, 5vw, 3rem);\n      font-weight: 900; letter-spacing: 0.25em;\n      color: #D4AF37;\n      animation: shimmer 2s ease-in-out infinite;\n    }\n    @keyframes shimmer {\n      0%,100% { opacity: .45; text-shadow: none; }\n      50%      { opacity: 1;   text-shadow: 0 0 40px rgba(212,175,55,.45); }\n    }\n    .loader-bar {\n      width: 180px; height: 1px;\n      background: rgba(212,175,55,.15);\n      position: relative; overflow: hidden;\n    }\n    .loader-bar::after {\n      content: ''; position: absolute;\n      inset: 0; left: -100%;\n      background: linear-gradient(90deg, transparent, #D4AF37, transparent);\n      animation: sweep 1.4s ease-in-out infinite;\n    }\n    @keyframes sweep { to { left: 200%; } }\n    .loader-sub {\n      font-family: 'Cinzel', serif;\n      font-size: .6rem; letter-spacing: .45em; text-transform: uppercase;\n      color: rgba(212,175,55,.4);\n    }\n\n    /* \u2500\u2500 Navigation \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */\n    .nav {\n      position: fixed; top: 0; left: 0; right: 0; z-index: 200;\n      padding: 1.6rem 4rem;\n      display: flex; justify-content: space-between; align-items: center;\n      transition: background .5s ease, border-color .5s ease, backdrop-filter .5s ease;\n    }\n    .nav.bg {\n      background: rgba(5,5,12,.82);\n      backdrop-filter: blur(14px);\n      border-bottom: 1px solid var(--border);\n    }\n    .nav-logo {\n      font-family: 'Cinzel Decorative', serif;\n      font-size: 1.05rem; font-weight: 900;\n      letter-spacing: .18em; color: var(--gold);\n      text-decoration: none; transition: color var(--tt);\n    }\n    .nav-links { display: flex; gap: 2.8rem; list-style: none; }\n    .nav-links a {\n      font-family: 'Cinzel', serif;\n      font-size: .68rem; letter-spacing: .22em; text-transform: uppercase;\n      color: rgba(255,255,255,.75); text-decoration: none;\n      transition: color .3s ease;\n      position: relative;\n    }\n    .nav-links a::after {\n      content: ''; position: absolute;\n      bottom: -3px; left: 0; width: 0; height: 1px;\n      background: var(--gold); transition: width .3s ease;\n    }\n    .nav-links a:hover { color: var(--gold); }\n    .nav-links a:hover::after { width: 100%; }\n</style>\n<div id=\"loader\">\n  <div class=\"loader-title\">OLYMPUS</div>\n  <div class=\"loader-bar\"></div>\n  <div class=\"loader-sub\">Entering the Realm of Gods</div>\n</div>\n<nav class=\"nav\" id=\"nav\">\n  <a href=\"#\" class=\"nav-logo\">OLYMPUS</a>\n  <ul class=\"nav-links\">\n    <li><a href=\"#pantheon\">The Gods</a></li>\n    <li><a href=\"#myths\">Myths</a></li>\n    <li><a href=\"#oracle\">Oracle</a></li>\n    <li><a href=\"#chronicles\">Chronicles</a></li>\n  </ul>\n</nav>\n"
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

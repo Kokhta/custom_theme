@@ -1,0 +1,39 @@
+{
+  "title": "Olympus - Myths",
+  "type": "page",
+  "version": "0.4",
+  "page_settings": [],
+  "content": [
+    {
+      "id": "1e4fda95",
+      "elType": "section",
+      "isInner": false,
+      "settings": {
+        "structure": "10"
+      },
+      "elements": [
+        {
+          "id": "a34f0bc8",
+          "elType": "column",
+          "isInner": false,
+          "settings": {
+            "_column_size": 100,
+            "structure": "10"
+          },
+          "elements": [
+            {
+              "id": "61878eeb",
+              "elType": "widget",
+              "widgetType": "html",
+              "isInner": false,
+              "settings": {
+                "html": "\n<style>\n    /* \u2500\u2500 Reset \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */\n    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }\n    html { scroll-behavior: auto; }\n\n    /* \u2500\u2500 Tokens \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */\n    :root {\n      --bg:          #F5EDD6;\n      --bg-alt:      #EDE5C8;\n      --bg-card:     rgba(255, 253, 245, 0.88);\n      --text:        #1A0E05;\n      --text-muted:  #7A6244;\n      --text-faint:  #B0946A;\n      --gold:        #C9A227;\n      --gold-lt:     #E8C84A;\n      --gold-dk:     #9A7510;\n      --gold-dim:    rgba(201,162,39,0.30);\n      --gold-glow:   rgba(201,162,39,0.12);\n      --border:      rgba(201,162,39,0.22);\n      --tt: 1.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);\n    }\n    [data-theme=\"dark\"] {\n      --bg:          #05050C;\n      --bg-alt: #0A0A18;\n      --bg-card: rgba(12, 12, 24, 0.92);\n      --text: #EAE0C8;\n      --text-muted: #9B8A6E;\n      --text-faint: #6B5A44;\n      --gold: #D4AF37;\n      --gold-lt: #F0D060;\n      --gold-dk: #B08820;\n      --gold-dim: rgba(212,175,55,0.28);\n      --gold-glow: rgba(212,175,55,0.09);\n      --border: rgba(212,175,55,0.18);\n    }\n\n    body {\n      background: var(--bg);\n      color: var(--text);\n      font-family: 'Cormorant Garamond', Georgia, serif;\n      overflow-x: hidden;\n      transition: background var(--tt), color var(--tt);\n    }\n\n    ::-webkit-scrollbar { width: 5px; }\n    ::-webkit-scrollbar-track { background: var(--bg); }\n    ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }\n    ::-webkit-scrollbar-thumb:hover { background: var(--gold); }\n\n    .reveal { opacity: 0; transform: translateY(38px); }\n</style>\n<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n<link href=\"https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&display=swap\" rel=\"stylesheet\">\n<script src=\"https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js\"></script>\n<script src=\"https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js\"></script>\n\n<style>\n    .myths { background: var(--bg); transition: background var(--tt); }\n    .myth-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 4.5rem; align-items: center; margin-top: 5rem; }\n    .myth-pair + .myth-pair { margin-top: 6rem; }\n    .myth-vis { aspect-ratio: 4/5; background: var(--bg-alt); border: 1px solid var(--border); position: relative; overflow: hidden; transition: background var(--tt), border-color var(--tt); }\n    .myth-vis-bg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 7rem; opacity: .12; user-select: none; }\n    .myth-vis-caption { position: absolute; bottom: 0; left: 0; right: 0; padding: 1.5rem; background: linear-gradient(to top, rgba(0,0,0,.55), transparent); font-family: 'Cinzel', serif; font-size: .58rem; letter-spacing: .42em; color: rgba(255,255,255,.7); }\n    .myth-label { font-family: 'Cinzel', serif; font-size: .62rem; letter-spacing: .48em; text-transform: uppercase; color: var(--gold); margin-bottom: .8rem; transition: color var(--tt); }\n    .myth-title { font-family: 'Cinzel', serif; font-size: clamp(1.6rem, 3vw, 2.6rem); font-weight: 700; color: var(--text); margin-bottom: 1.3rem; line-height: 1.2; transition: color var(--tt); }\n    .myth-body { font-size: 1.05rem; font-weight: 300; color: var(--text-muted); line-height: 1.92; margin-bottom: 1.4rem; transition: color var(--tt); }\n    .myth-link { display: inline-flex; align-items: center; gap: .7rem; font-family: 'Cinzel', serif; font-size: .65rem; letter-spacing: .28em; text-transform: uppercase; color: var(--gold); text-decoration: none; border-bottom: 1px solid var(--gold-dim); padding-bottom: .2rem; transition: gap .3s ease, border-color .3s ease, color var(--tt); }\n    .myth-link:hover { gap: 1.2rem; border-color: var(--gold); }\n</style>\n<div class=\"meander\" style=\"width: 100%; height: 22px; opacity: .45; background-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='22'%3E%3Cpath d='M0 11h6V5h6v6h6V5h6v11h-6v-5h-6v5h-6V5H0z' fill='none' stroke='%23C9A227' stroke-width='1'/%3E%3C/svg%3E&quot;); background-repeat: repeat-x;\"></div>\n<section class=\"sec myths\" id=\"myths\">\n  <div class=\"sec-inner\">\n    <div class=\"sec-label reveal\">Sacred Tales</div>\n    <h2 class=\"sec-title reveal\">The Great Myths</h2>\n    <div class=\"myth-pair\">\n      <div class=\"myth-vis reveal\">\n        <div class=\"myth-vis-bg\">\u26a1</div>\n        <div class=\"myth-vis-caption\">The War of the Titans \u00b7 c. 700 BCE</div>\n      </div>\n      <div>\n        <div class=\"myth-label reveal\">The Titanomachy</div>\n        <h3 class=\"myth-title reveal\">The War That Shaped Creation</h3>\n        <p class=\"myth-body reveal\">For ten savage years, the young Olympian gods waged cosmic war against the ancient Titans for dominion over creation.</p>\n        <a href=\"#\" class=\"myth-link reveal\">Read the Full Myth \u2192</a>\n      </div>\n    </div>\n  </div>\n</section>\n"
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

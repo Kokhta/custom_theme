@@ -1,0 +1,39 @@
+{
+  "title": "Olympus - Pantheon",
+  "type": "page",
+  "version": "0.4",
+  "page_settings": [],
+  "content": [
+    {
+      "id": "e5a5d966",
+      "elType": "section",
+      "isInner": false,
+      "settings": {
+        "structure": "10"
+      },
+      "elements": [
+        {
+          "id": "7151533a",
+          "elType": "column",
+          "isInner": false,
+          "settings": {
+            "_column_size": 100,
+            "structure": "10"
+          },
+          "elements": [
+            {
+              "id": "c4d0c1fe",
+              "elType": "widget",
+              "widgetType": "html",
+              "isInner": false,
+              "settings": {
+                "html": "\n<style>\n    /* \u2500\u2500 Reset \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */\n    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }\n    html { scroll-behavior: auto; }\n\n    /* \u2500\u2500 Tokens \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */\n    :root {\n      --bg:          #F5EDD6;\n      --bg-alt:      #EDE5C8;\n      --bg-card:     rgba(255, 253, 245, 0.88);\n      --text:        #1A0E05;\n      --text-muted:  #7A6244;\n      --text-faint:  #B0946A;\n      --gold:        #C9A227;\n      --gold-lt:     #E8C84A;\n      --gold-dk:     #9A7510;\n      --gold-dim:    rgba(201,162,39,0.30);\n      --gold-glow:   rgba(201,162,39,0.12);\n      --border:      rgba(201,162,39,0.22);\n      --tt: 1.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);\n    }\n    [data-theme=\"dark\"] {\n      --bg:          #05050C;\n      --bg-alt: #0A0A18;\n      --bg-card: rgba(12, 12, 24, 0.92);\n      --text: #EAE0C8;\n      --text-muted: #9B8A6E;\n      --text-faint: #6B5A44;\n      --gold: #D4AF37;\n      --gold-lt: #F0D060;\n      --gold-dk: #B08820;\n      --gold-dim: rgba(212,175,55,0.28);\n      --gold-glow: rgba(212,175,55,0.09);\n      --border: rgba(212,175,55,0.18);\n    }\n\n    body {\n      background: var(--bg);\n      color: var(--text);\n      font-family: 'Cormorant Garamond', Georgia, serif;\n      overflow-x: hidden;\n      transition: background var(--tt), color var(--tt);\n    }\n\n    ::-webkit-scrollbar { width: 5px; }\n    ::-webkit-scrollbar-track { background: var(--bg); }\n    ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }\n    ::-webkit-scrollbar-thumb:hover { background: var(--gold); }\n\n    .reveal { opacity: 0; transform: translateY(38px); }\n</style>\n<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n<link href=\"https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,600&display=swap\" rel=\"stylesheet\">\n<script src=\"https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js\"></script>\n<script src=\"https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js\"></script>\n\n<style>\n    .sec { padding: 8rem 4rem; }\n    .sec-inner { max-width: 1320px; margin: 0 auto; }\n    .pantheon { background: var(--bg-alt); transition: background var(--tt); }\n    .sec-title { font-family: 'Cinzel', serif; font-size: clamp(2rem, 5vw, 4rem); font-weight: 700; color: var(--text); line-height: 1.1; margin-bottom: 1.2rem; transition: color var(--tt); }\n    .sec-sub { font-size: clamp(1rem, 1.8vw, 1.28rem); font-weight: 300; font-style: italic; color: var(--text-muted); line-height: 1.85; max-width: 580px; transition: color var(--tt); }\n    .gods-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1.8rem; margin-top: 4.5rem; }\n    .god-card { background: var(--bg-card); border: 1px solid var(--border); padding: 2.4rem 2.2rem; position: relative; overflow: hidden; cursor: default; transition: background var(--tt), border-color var(--tt), transform .4s ease, box-shadow .4s ease; }\n    .god-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(to right, transparent, var(--gold), transparent); opacity: 0; transition: opacity .4s ease; }\n    .god-card:hover { transform: translateY(-5px); box-shadow: 0 20px 55px rgba(0,0,0,.08), 0 0 40px var(--gold-glow); }\n    .god-sym  { font-size: 2.4rem; display: block; margin-bottom: 1.3rem; }\n    .god-realm { font-family: 'Cinzel', serif; font-size: .58rem; letter-spacing: .5em; text-transform: uppercase; color: var(--gold); margin-bottom: .6rem; transition: color var(--tt); }\n    .god-name { font-family: 'Cinzel', serif; font-size: 1.75rem; font-weight: 700; color: var(--text); margin-bottom: .9rem; transition: color var(--tt); }\n    .god-desc { font-size: .98rem; font-weight: 300; font-style: italic; color: var(--text-muted); line-height: 1.82; transition: color var(--tt); }\n    .god-num { position: absolute; bottom: 1.2rem; right: 1.8rem; font-family: 'Cinzel', serif; font-size: 2.8rem; font-weight: 900; color: var(--gold-dim); line-height: 1; transition: color var(--tt); }\n</style>\n<div class=\"meander\" style=\"width: 100%; height: 22px; opacity: .45; background-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='22'%3E%3Cpath d='M0 11h6V5h6v6h6V5h6v11h-6v-5h-6v5h-6V5H0z' fill='none' stroke='%23C9A227' stroke-width='1'/%3E%3C/svg%3E&quot;); background-repeat: repeat-x;\"></div>\n<section class=\"sec pantheon\" id=\"pantheon\">\n  <div class=\"sec-inner\">\n    <div class=\"sec-label reveal\">The Twelve Olympians</div>\n    <h2 class=\"sec-title reveal\">The Divine Pantheon</h2>\n    <p class=\"sec-sub reveal\">Rulers of the cosmos, shaping the destiny of mortals from their eternal thrones atop sacred Mount Olympus.</p>\n    <div class=\"gods-grid\">\n      <div class=\"god-card reveal\">\n        <span class=\"god-sym\">\u26a1</span>\n        <div class=\"god-realm\">King of the Gods</div>\n        <div class=\"god-name\">Zeus</div>\n        <p class=\"god-desc\">Lord of sky, thunder, and lightning. Father of gods and men, wielder of the thunderbolt, supreme ruler of Olympus.</p>\n        <div class=\"god-num\">I</div>\n      </div>\n      <div class=\"god-card reveal\">\n        <span class=\"god-sym\">\ud83d\udd31</span>\n        <div class=\"god-realm\">God of the Sea</div>\n        <div class=\"god-name\">Poseidon</div>\n        <p class=\"god-desc\">Master of the oceans, earthquakes, and horses. His trident can split mountains and summon tempests from calm waters.</p>\n        <div class=\"god-num\">II</div>\n      </div>\n      <div class=\"god-card reveal\">\n        <span class=\"god-sym\">\ud83e\udd89</span>\n        <div class=\"god-realm\">Goddess of Wisdom</div>\n        <div class=\"god-name\">Athena</div>\n        <p class=\"god-desc\">Born fully armored from the head of Zeus. Goddess of wisdom, strategic war, and craft \u2014 patron deity of Athens.</p>\n        <div class=\"god-num\">III</div>\n      </div>\n    </div>\n  </div>\n</section>\n"
+              },
+              "elements": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
