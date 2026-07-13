@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-vazir: var(--font-vazir);
+  --color-primary: #00A4FF;
+  --color-deepblue: #004E8C;
+  --color-cta: #22C55E;
+}
+
+:root {
+  --background: #000814;
+  --foreground: #ffffff;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  margin: 0;
+  overflow-x: hidden;
+  user-select: none;
+}
+
+canvas {
+  touch-action: none;
+}
+
+.font-vazir {
+  font-family: var(--font-vazir), sans-serif;
+}
